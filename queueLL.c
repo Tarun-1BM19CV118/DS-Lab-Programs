@@ -1,106 +1,97 @@
 #include<stdio.h>
 #include<conio.h>
-#define qsize 5
-int isfull(int r)
-  {
-   return(r==qsize-1)?1:0;
-  }
-int isempty(int f,int r)
-  {
-   return(f>r)?1:0;
-  }
-void insert_rear(int item,int *r,int q[])
-  {
-   if(isfull(*r))
-	 {
-	  printf("queue overflow\n");
-	  return;
-	 }
-   *r=*r+1;
-   q[*r]=item;
-  }
-void delete_front(int *f,int *r,int q[])
-  {
-   if(isempty(*f,*r))
-	 {
-	  printf("queue empty\n");
-	  return;
-	 }
-   printf("item deleted is %d\n",q[(*f)++]);
-   if(*f>*r)
-	 {
-	  *f=0;
-	  *r=-1;
-	 }
-  }
-void insert_front(int *f,int *r,int q[],int item)
-  {
-   if(*f!=0)
-	 {
-	  *f=*f-1;
-	  q[*f]=item;
-	  return;
-	 }
-	else if((*f==0)&&(*r==-1))
-	 {
-	  q[++(*r)]=item;
-	  return;
-	 }
-	else
-	  printf("insertion not possible\n");
-  }
-void delete_rear(int *f,int *r,int q[])
-  {
-   if(isempty(*f,*r))
-	 {
-	  printf("queue is empty\n");
-	  return;
-	 }
-   printf("item deleted is %d\n",q[(*r)--]);
-   if(*f>*r)
-	 {
-	  *f=0;
-	  *r=-1;
-	 }
-  }
-void display(int f,int r ,int q[])
-  {
-   int i;
-   if(isempty(f,r))
-	 {
-	  printf("queue empty\n");
-	  return;
-	 }
-   for(i=f;i<=r;i++)
-	printf("%d\n",q[i]);
-  }
-void main()
- {
-  int f=0,r=-1,item,q[10],ch;
+#include<stdlib.h>
 
-  for(;;)
-   {
-	printf("1.insert_rear\n2.insert_front\n3.delete_rear\n4.delete_front\n5.display\n6.exit\n");
-	printf("enter choice\n");
-	scanf("%d",&ch);
-	switch(ch)
-	  {
-	   case 1:printf("enter the item\n");
-			  scanf("%d",&item);
-			  insert_rear(item,&r,q);
-			  break;
-	   case 2:printf("enter the item\n");
-			  scanf("%d",&item);
-			  insert_front(&f,&r,q,item);
-			  break;
-	   case 3:delete_rear(&f,&r,q);
-			  break;
-	   case 4:delete_front(&f,&r,q);
-			  break;
-	   case 5:display(f,r,q);
-			  break;
-	   default:exit(0);
-	  }
-	}
+struct node
+{
+  int info;
+  struct node *link;
+};
+typedef struct node *NODE;
+NODE getnode()
+{
+NODE x;
+x=(NODE)malloc(sizeof(struct node));
+if(x==NULL)
+ {
+  printf("mem full\n");
+  exit(0);
+ }
+ return x;
+}
+void freenode(NODE x)
+{
+free(x);
+}
+NODE insert_rear(NODE first,int item)
+{
+NODE temp,cur;
+temp=getnode();
+temp->info=item;
+temp->link=NULL;
+if(first==NULL)
+ return temp;
+cur=first;
+while(cur->link!=NULL)
+ cur=cur->link;
+cur->link=temp;
+return first;
+}
+
+NODE delete_front(NODE first)
+{
+NODE temp;
+if(first==NULL)
+{
+printf("list is empty cannot delete\n");
+return first;
+}
+temp=first;
+temp=temp->link;
+printf("item deleted at front-end is=%d\n",first->info);
+free(first);
+return temp;
+}
+void display(NODE first)
+{
+ NODE temp;
+ if(first==NULL)
+ printf("list empty cannot display items\n");
+ for(temp=first;temp!=NULL;temp=temp->link)
+  {
+  printf("%d\n",temp->info);
   }
+}
+void main()
+{
+int item,choice,pos;
+NODE first=NULL;
+
+for(;;)
+{
+printf("\n 1:Insert_rear\n 2:Delete_front\n 3:Display_list\n 4:Exit\n");
+printf("enter the choice\n");
+scanf("%d",&choice);
+switch(choice)
+ {
+  case 1:printf("enter the item at rear-end\n");
+	 scanf("%d",&item);
+	 first=insert_rear(first,item);
+	 break;
+  case 2:first=delete_front(first);
+	 break;
+  case 3:display(first);
+	 break;
+ default:exit(0);
+	 break;
+ }
+}
+
+}
+
+
+
+
+
+
 
