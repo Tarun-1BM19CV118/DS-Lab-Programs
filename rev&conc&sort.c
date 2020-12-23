@@ -55,6 +55,33 @@ NODE concat(NODE first,NODE second)
  cur=cur->link;
  cur->link=second;
  return first; }
+ NODE sort(NODE first)
+{
+int swapped;
+NODE ptr1;
+NODE lptr = NULL;
+if (first == NULL)
+return NULL;
+do
+    {
+        swapped = 0;
+        ptr1 = first;
+
+        while (ptr1->link != lptr)
+        {
+            if (ptr1->info > ptr1->link->info)
+            {
+
+                int tem = ptr1->info;
+                ptr1->info = ptr1->link->info;
+                ptr1->link->info = tem;
+                    swapped = 1;
+            }
+            ptr1 = ptr1->link;
+        }
+        lptr = ptr1;
+    } while (swapped);
+}
 NODE reverse(NODE first)
  {
  NODE cur,temp;
@@ -71,7 +98,7 @@ void main() {
 int item,choice,pos,i,n;
 NODE first=NULL,a,b;
 for(;;) {
-printf("1.insert_front\n2.concat\n3.reverse\n4.dislay\n5.exit\n");
+printf("1.insert_front\n2.concat\n3.reverse\n4.sort\n5.dislay\n6.exit\n");
 printf("enter the choice\n");
 scanf("%d",&choice);
 switch(choice)
@@ -105,7 +132,10 @@ switch(choice)
  case 3:first=reverse(first);
  display(first);
  break;
- case 4:display(first);
+ case 4:sort(first);
+	 display(first);
+    break;
+ case 5:display(first);
  break;
  default:exit(0);
  }
